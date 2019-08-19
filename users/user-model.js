@@ -1,4 +1,4 @@
-module.exports = { findUsers, addUser };
+module.exports = { findUsers, addUser, findBy, findById };
 
 const knex = require("knex");
 
@@ -12,4 +12,14 @@ function findUsers() {
 
 function addUser(user) {
   return Users("users").insert(user);
+}
+
+function findBy(filter) {
+  return Users("users").where(filter);
+}
+
+function findById(id) {
+  return Users("users")
+    .where({ id })
+    .first();
 }

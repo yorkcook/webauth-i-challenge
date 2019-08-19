@@ -1,9 +1,8 @@
 const express = require("express");
-//const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 
 const Users = require("./user-model.js");
-// const knex = require("knex");
-// const knexConfig = require("../knexfile.js");
+const restricted = require("../auth/restricted-middleware.js");
 
 const router = express.Router();
 
@@ -11,7 +10,7 @@ router.get("/", (req, res) => {
   res.send("IT IS ALIVEEE!!!");
 });
 
-router.get("/users", (req, res) => {
+router.get("/users", restricted, (req, res) => {
   Users.findUsers()
     .then(users => {
       res.status(200).json(users);
@@ -26,16 +25,17 @@ router.get("/users", (req, res) => {
 router.post("/register", (req, res) => {
   let user = req.body;
 
+  const hash = bcrypt.hashSync(user.password);
+  user.password = hash;
+
   Users.addUser(user)
     .then(newUser => {
       res.status(201).json(newUser);
     })
     .catch(error => {
-      res
-        .status(500)
-        .json({
-          message: "We do not want that person on our team! They stink!"
-        });
+      res.status(500).json({
+        message: "We do not want that person on our team! They stink!"
+      });
     });
 });
 
