@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
   res.send("IT IS ALIVEEE!!!");
 });
 
-router.get("/users", restricted, (req, res) => {
+router.get("/restricted/users", restricted, (req, res) => {
   Users.findUsers()
     .then(users => {
       res.status(200).json(users);
@@ -39,6 +39,6 @@ router.post("/register", (req, res) => {
     });
 });
 
-router.post("/login", (req, res) => {});
+router.post("/restricted/login", (req, res) => {});
 
 module.exports = router;
