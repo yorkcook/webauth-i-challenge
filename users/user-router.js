@@ -48,7 +48,10 @@ router.post("/login", (req, res) => {
       if (user && bcrypt.compareSync(password, user.password)) {
         req.session.movie = "Top Gun";
         req.session.username = user.username;
-        res.status(200).json({ message: `Welcome ${user.username}` });
+        req.session.cookie = { ...req.session.cookie, userID: user.id };
+        res
+          .status(200)
+          .json({ message: `Welcome ${user.username}`, session: req.session });
       } else {
         res.status(401).json({ message: "Invalid Credentials" });
       }
